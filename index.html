@@ -117,7 +117,6 @@
     cursor: pointer; font-family: var(--font-body);
   }
 
-  /* Progress */
   .step {
     display: flex; align-items: center; gap: 14px;
     padding: 14px 18px; margin-bottom: 6px;
@@ -125,6 +124,7 @@
     transition: all 0.3s ease;
   }
   .step.active { background: rgba(200,169,126,0.08); border-color: rgba(200,169,126,0.2); animation: borderGlow 2s ease infinite; }
+  .step.error-step { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.15); }
   .step-num {
     width: 28px; height: 28px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
@@ -133,12 +133,12 @@
   .step-num.done { background: rgba(74,222,128,0.15); color: var(--green); }
   .step-num.active { background: var(--gold-dim); color: var(--gold); }
   .step-num.pending { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+  .step-num.errored { background: rgba(239,68,68,0.15); color: var(--red); }
   .dots { margin-left: auto; display: flex; gap: 3px; }
   .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: pulse 1.4s ease-in-out infinite; }
   .dot:nth-child(2) { animation-delay: 0.2s; }
   .dot:nth-child(3) { animation-delay: 0.4s; }
 
-  /* Email gate */
   .email-gate {
     text-align: center; padding: 48px 32px;
     background: linear-gradient(135deg, rgba(200,169,126,0.08), rgba(200,169,126,0.02));
@@ -146,15 +146,11 @@
     border-radius: 16px; margin-bottom: 32px;
     animation: fadeUp 0.5s ease;
   }
-  .email-gate h2 {
-    font-family: var(--font-display); font-size: 24px;
-    font-weight: 600; color: #fff; margin-bottom: 12px;
-  }
+  .email-gate h2 { font-family: var(--font-display); font-size: 24px; font-weight: 600; color: #fff; margin-bottom: 12px; }
   .email-gate p { font-size: 14px; color: var(--text-dim); margin-bottom: 24px; line-height: 1.5; }
   .email-gate input { max-width: 360px; margin: 0 auto 12px; display: block; }
   .email-gate .btn-primary { max-width: 360px; margin: 0 auto; }
 
-  /* Report */
   .report-header {
     background: linear-gradient(135deg, rgba(200,169,126,0.08), rgba(200,169,126,0.02));
     border: 1px solid rgba(200,169,126,0.2);
@@ -173,10 +169,12 @@
   .rec-card.critical { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15); }
   .rec-card.high { background: rgba(200,169,126,0.06); border: 1px solid rgba(200,169,126,0.15); }
   .rec-card.medium { background: rgba(255,255,255,0.02); border: 1px solid var(--border); }
+  .rec-card.optimize { background: rgba(74,222,128,0.04); border: 1px solid rgba(74,222,128,0.15); }
   .rec-badge { padding: 2px 10px; border-radius: 10px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
   .rec-badge.critical { background: rgba(239,68,68,0.15); color: var(--red); }
   .rec-badge.high { background: var(--gold-dim); color: var(--gold); }
   .rec-badge.medium { background: rgba(255,255,255,0.08); color: var(--text-dim); }
+  .rec-badge.optimize { background: rgba(74,222,128,0.12); color: var(--green); }
 
   .cta-card {
     text-align: center; padding: 32px 24px;
@@ -197,12 +195,18 @@
   .error { color: var(--red); font-size: 13px; margin-top: 12px; }
   .hidden { display: none; }
 
-  .social-proof {
-    display: flex; gap: 24px; justify-content: center; margin-top: 24px;
-    flex-wrap: wrap;
-  }
+  .social-proof { display: flex; gap: 24px; justify-content: center; margin-top: 24px; flex-wrap: wrap; }
   .proof-item { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
   .proof-item span { color: var(--gold); font-weight: 600; }
+
+  .error-banner {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 12px; padding: 20px 24px;
+    margin-bottom: 24px; animation: fadeUp 0.4s ease;
+  }
+  .error-banner p { font-size: 14px; color: var(--text-dim); line-height: 1.5; margin: 0; }
+  .error-banner strong { color: var(--red); }
 
   @keyframes pulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.3); } }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -212,7 +216,6 @@
 <body>
 
 <div class="container" id="app">
-  <!-- Header -->
   <div style="text-align:center; margin-bottom:48px;">
     <div class="tag">Free AI Visibility Audit</div>
     <h1>Is AI Search Finding<br><span>Your Brand?</span></h1>
@@ -224,7 +227,6 @@
     </div>
   </div>
 
-  <!-- Input -->
   <div class="card" id="inputSection">
     <div class="field">
       <label class="section-label">Your Brand Name</label>
@@ -244,13 +246,8 @@
     <p style="font-size:11px; color:#444; text-align:center; margin-top:12px;">Powered by live AI search analysis · Takes about 60 seconds</p>
   </div>
 
-  <!-- Progress -->
   <div id="progress" class="hidden"></div>
-
-  <!-- Email Gate -->
   <div id="emailGate" class="hidden"></div>
-
-  <!-- Report -->
   <div id="report" class="hidden"></div>
 </div>
 
@@ -264,15 +261,15 @@ const CATEGORIES = [
 
 const QUERIES = [
   { id: "discovery", label: "Brand Discovery", desc: "Can AI find this brand when consumers search?",
-    tpl: (b,c) => `Search the web for "${b}" in the ${c} space. What do you find about this brand? Summarize their online presence, what they're known for, and how prominently they appear. If you find very little, say so clearly. Respond in JSON only, no markdown, no backticks: {"found": true/false, "summary": "2-3 sentences", "sources_found": ["list of domains/platforms where brand appeared"], "prominence": "high/medium/low/not_found"}` },
+    tpl: (b,c) => `Search the web for "${b}" in the ${c} space. What do you find about this brand? Summarize their online presence, what they're known for, and how prominently they appear. If you find very little, say so clearly. You MUST respond with ONLY a JSON object, no other text, no markdown, no backticks, no explanation before or after. The JSON format is: {"found": true, "summary": "2-3 sentences", "sources_found": ["domain1.com", "domain2.com"], "prominence": "high"}. The prominence field must be exactly one of: "high", "medium", "low", or "not_found".` },
   { id: "category", label: "Category Authority", desc: "Is this brand recommended when consumers ask about the category?",
-    tpl: (b,c) => `Search the web for the best ${c} brands. List the top brands that come up most prominently. Is "${b}" among them? Respond in JSON only, no markdown, no backticks: {"brand_mentioned": true/false, "top_brands_found": ["list of top 5-8 brands found"], "brand_position": "top_tier/mentioned/absent", "category_leaders": "1-2 sentence summary of who dominates"}` },
+    tpl: (b,c) => `Search the web for the best ${c} brands. List the top brands that come up most prominently. Is "${b}" among them? You MUST respond with ONLY a JSON object, no other text, no markdown, no backticks, no explanation before or after. The JSON format is: {"brand_mentioned": true, "top_brands_found": ["Brand1", "Brand2", "Brand3"], "brand_position": "top_tier", "category_leaders": "1-2 sentence summary"}. The brand_position field must be exactly one of: "top_tier", "mentioned", or "absent".` },
   { id: "reputation", label: "Brand Sentiment & Reviews", desc: "What does AI surface about brand quality and reputation?",
-    tpl: (b,c) => `Search the web for reviews, press coverage, and reputation of "${b}" (${c}). What is the general sentiment? Are there notable press mentions, awards, or reviews? Respond in JSON only, no markdown, no backticks: {"sentiment": "positive/mixed/negative/insufficient_data", "notable_mentions": ["list any press, awards, notable reviews"], "review_presence": "strong/moderate/weak/none", "summary": "2-3 sentences about overall reputation found online"}` },
+    tpl: (b,c) => `Search the web for reviews, press coverage, and reputation of "${b}" (${c}). What is the general sentiment? Are there notable press mentions, awards, or reviews? You MUST respond with ONLY a JSON object, no other text, no markdown, no backticks, no explanation before or after. The JSON format is: {"sentiment": "positive", "notable_mentions": ["mention1", "mention2"], "review_presence": "strong", "summary": "2-3 sentences"}. The sentiment field must be exactly one of: "positive", "mixed", "negative", or "insufficient_data". The review_presence field must be exactly one of: "strong", "moderate", "weak", or "none".` },
   { id: "competitors", label: "Competitive Landscape", desc: "How does AI position this brand relative to competitors?",
-    tpl: (b,c) => `Search the web and compare "${b}" to its competitors in the ${c} space. Who are the main competitors? How does ${b} differentiate? Respond in JSON only, no markdown, no backticks: {"main_competitors": ["list 3-5 competitors found"], "differentiation": "what makes the brand unique or how it's positioned", "competitive_position": "leader/competitive/underdog/invisible", "summary": "2-3 sentences"}` },
+    tpl: (b,c) => `Search the web and compare "${b}" to its competitors in the ${c} space. Who are the main competitors? How does ${b} differentiate? You MUST respond with ONLY a JSON object, no other text, no markdown, no backticks, no explanation before or after. The JSON format is: {"main_competitors": ["Comp1", "Comp2", "Comp3"], "differentiation": "what makes the brand unique", "competitive_position": "competitive", "summary": "2-3 sentences"}. The competitive_position field must be exactly one of: "leader", "competitive", "underdog", or "invisible".` },
   { id: "purchase", label: "Purchase Intent Capture", desc: "Does AI recommend this brand when consumers want to buy?",
-    tpl: (b,c) => `Search the web: where can I buy the best ${c}? What brands and retailers come up? Is "${b}" recommended as a purchase option? Respond in JSON only, no markdown, no backticks: {"brand_recommended": true/false, "recommended_brands": ["brands that come up for purchase"], "purchase_channels_found": ["any retail/DTC channels found for the brand"], "buy_intent_visibility": "high/medium/low/none", "summary": "2-3 sentences"}` }
+    tpl: (b,c) => `Search the web: where can I buy the best ${c}? What brands and retailers come up? Is "${b}" recommended as a purchase option? You MUST respond with ONLY a JSON object, no other text, no markdown, no backticks, no explanation before or after. The JSON format is: {"brand_recommended": true, "recommended_brands": ["Brand1", "Brand2"], "purchase_channels_found": ["channel1.com", "channel2.com"], "buy_intent_visibility": "medium", "summary": "2-3 sentences"}. The buy_intent_visibility field must be exactly one of: "high", "medium", "low", or "none".` }
 ];
 
 let selectedCategory = '';
@@ -280,6 +277,10 @@ let results = {};
 let auditBrand = '';
 let auditCat = '';
 let auditName = '';
+let errorCount = 0;
+
+// ⚠️ REPLACE THIS WITH YOUR ACTUAL API KEY
+const API_KEY = 'YOUR_API_KEY_HERE';
 
 window.addEventListener('DOMContentLoaded', renderChips);
 
@@ -291,7 +292,106 @@ function renderChips() {
 }
 function selectCat(c) { selectedCategory = c; document.getElementById('customCategory').value = ''; renderChips(); }
 
-// Scoring (same as consultant version)
+// === ROBUST JSON EXTRACTION ===
+function extractJSON(text) {
+  if (!text || text.trim().length === 0) return null;
+
+  // Try direct parse first
+  try {
+    return JSON.parse(text.trim());
+  } catch(e) {}
+
+  // Remove markdown code fences
+  let cleaned = text.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
+  try {
+    return JSON.parse(cleaned);
+  } catch(e) {}
+
+  // Find JSON object in the text (first { to last })
+  const firstBrace = cleaned.indexOf('{');
+  const lastBrace = cleaned.lastIndexOf('}');
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    try {
+      return JSON.parse(cleaned.substring(firstBrace, lastBrace + 1));
+    } catch(e) {}
+  }
+
+  // Try to find JSON in the original text too
+  const origFirst = text.indexOf('{');
+  const origLast = text.lastIndexOf('}');
+  if (origFirst !== -1 && origLast !== -1 && origLast > origFirst) {
+    try {
+      return JSON.parse(text.substring(origFirst, origLast + 1));
+    } catch(e) {}
+  }
+
+  return null;
+}
+
+// === API CALL WITH RETRY ===
+async function callAPI(prompt, retries = 1) {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': API_KEY,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1024,
+          messages: [{ role: 'user', content: prompt }],
+          tools: [{ type: 'web_search_20250305', name: 'web_search' }]
+        })
+      });
+
+      if (!resp.ok) {
+        const errData = await resp.json().catch(() => ({}));
+        const errMsg = errData?.error?.message || `HTTP ${resp.status}`;
+        console.error(`API error (attempt ${attempt + 1}):`, errMsg);
+        if (attempt < retries) { await new Promise(r => setTimeout(r, 2000)); continue; }
+        throw new Error(errMsg);
+      }
+
+      const data = await resp.json();
+
+      if (data.error) {
+        console.error(`API returned error:`, data.error);
+        if (attempt < retries) { await new Promise(r => setTimeout(r, 2000)); continue; }
+        throw new Error(data.error.message || 'API error');
+      }
+
+      // Extract text from all content blocks
+      const textParts = [];
+      for (const block of (data.content || [])) {
+        if (block.type === 'text' && block.text) {
+          textParts.push(block.text);
+        }
+      }
+      const fullText = textParts.join('\n');
+
+      if (!fullText) {
+        console.warn('API returned no text content. Full response:', JSON.stringify(data).substring(0, 500));
+        if (attempt < retries) { await new Promise(r => setTimeout(r, 2000)); continue; }
+        throw new Error('No text in response');
+      }
+
+      return fullText;
+    } catch(e) {
+      if (attempt < retries) {
+        console.warn(`Attempt ${attempt + 1} failed, retrying...`, e.message);
+        await new Promise(r => setTimeout(r, 2000));
+        continue;
+      }
+      throw e;
+    }
+  }
+}
+
+// === SCORING ===
 function calcScore(id, data) {
   if (!data || data.error) return 0;
   let s = 0;
@@ -323,7 +423,7 @@ function calcScore(id, data) {
         if ((data.purchase_channels_found||[]).length > 1) s += 25; else if ((data.purchase_channels_found||[]).length > 0) s += 15;
         break;
     }
-  } catch(e) {}
+  } catch(e) { console.error('Scoring error:', e); }
   return Math.min(100, s);
 }
 
@@ -345,17 +445,7 @@ function svgRing(score, size, sw, color) {
   </svg>`;
 }
 
-async function callAPI(prompt) {
-  const resp = await fetch('/api/audit', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ prompt })
-  });
-  const data = await resp.json();
-  if (data.error) throw new Error(data.error);
-  return data.text;
-}
-
+// === AUDIT ===
 async function runAudit() {
   auditBrand = document.getElementById('brandName').value.trim();
   const custom = document.getElementById('customCategory').value.trim();
@@ -367,24 +457,37 @@ async function runAudit() {
     document.getElementById('errorMsg').classList.remove('hidden');
     return;
   }
+
+  // Check API key
+  if (API_KEY === 'YOUR_API_KEY_HERE' || !API_KEY) {
+    document.getElementById('errorMsg').textContent = 'Audit tool is being configured. Please check back shortly.';
+    document.getElementById('errorMsg').classList.remove('hidden');
+    return;
+  }
+
   document.getElementById('errorMsg').classList.add('hidden');
   document.getElementById('inputSection').style.display = 'none';
   document.getElementById('report').classList.add('hidden');
   document.getElementById('emailGate').classList.add('hidden');
 
   results = {};
+  errorCount = 0;
   const prog = document.getElementById('progress');
   prog.classList.remove('hidden');
 
   function renderProg(idx) {
     prog.innerHTML = QUERIES.map((q, i) => {
       const done = results[q.id] !== undefined;
+      const hasError = done && results[q.id] && results[q.id].error;
       const active = i === idx && !done;
-      return `<div class="step ${active?'active':''}">
-        <div class="step-num ${done?'done':active?'active':'pending'}">${done?'✓':i+1}</div>
+      const stepClass = active ? 'active' : hasError ? 'error-step' : '';
+      const numClass = hasError ? 'errored' : done ? 'done' : active ? 'active' : 'pending';
+      const icon = hasError ? '✗' : done ? '✓' : i + 1;
+      return `<div class="step ${stepClass}">
+        <div class="step-num ${numClass}">${icon}</div>
         <div>
-          <div style="font-size:14px;font-weight:500;color:${done?'var(--text-dim)':active?'var(--text)':'var(--text-muted)'}">${q.label}</div>
-          <div style="font-size:12px;color:${active?'var(--text-dim)':'#444'}">${q.desc}</div>
+          <div style="font-size:14px;font-weight:500;color:${hasError?'var(--red)':done?'var(--text-dim)':active?'var(--text)':'var(--text-muted)'}">${q.label}</div>
+          <div style="font-size:12px;color:${hasError?'rgba(239,68,68,0.6)':active?'var(--text-dim)':'#444'}">${hasError ? 'Analysis failed — will retry' : q.desc}</div>
         </div>
         ${active?'<div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>':''}
       </div>`;
@@ -396,16 +499,43 @@ async function runAudit() {
     const q = QUERIES[i];
     try {
       const text = await callAPI(q.tpl(auditBrand, auditCat));
-      const cleaned = text.replace(/```json|```/g, '').trim();
-      results[q.id] = JSON.parse(cleaned);
+      console.log(`[${q.id}] Raw response:`, text.substring(0, 300));
+
+      const parsed = extractJSON(text);
+      if (parsed) {
+        results[q.id] = parsed;
+        console.log(`[${q.id}] Parsed successfully:`, parsed);
+      } else {
+        console.error(`[${q.id}] Could not parse JSON from:`, text.substring(0, 500));
+        results[q.id] = { error: true, raw: 'Could not parse response' };
+        errorCount++;
+      }
     } catch(e) {
+      console.error(`[${q.id}] API call failed:`, e.message);
       results[q.id] = { error: true, raw: e.message };
+      errorCount++;
     }
     renderProg(i);
   }
 
   prog.classList.add('hidden');
-  showEmailGate();
+
+  // If ALL queries failed, show error instead of fake report
+  if (errorCount === QUERIES.length) {
+    showFatalError();
+  } else {
+    showEmailGate();
+  }
+}
+
+function showFatalError() {
+  const gate = document.getElementById('emailGate');
+  gate.classList.remove('hidden');
+  gate.innerHTML = `<div class="error-banner" style="text-align:center; padding:40px 32px;">
+    <h2 style="font-family:var(--font-display);font-size:22px;font-weight:600;color:#fff;margin-bottom:12px">Audit couldn't complete</h2>
+    <p style="margin-bottom:20px">We hit a technical issue running the analysis. This usually resolves itself quickly.</p>
+    <button class="btn-primary" onclick="resetAudit()" style="max-width:300px;margin:0 auto">Try Again</button>
+  </div>`;
 }
 
 function showEmailGate() {
@@ -429,13 +559,8 @@ function unlockReport() {
     alert('Please enter a valid email address.');
     return;
   }
-
-  // In production, you'd POST this to your CRM/email service here
   console.log('LEAD CAPTURED:', { brand: auditBrand, category: auditCat, name: auditName, email: email });
-
-  // You can add a fetch call here to send to your email service:
-  // fetch('/api/capture-lead', { method: 'POST', body: JSON.stringify({ brand: auditBrand, category: auditCat, name: auditName, email }) });
-
+  // TODO: POST to your email service here
   document.getElementById('emailGate').classList.add('hidden');
   renderReport();
 }
@@ -465,7 +590,6 @@ function renderReport() {
 
   let h = '';
 
-  // Header
   h += `<div class="report-header">
     <div class="section-label" style="margin-bottom:4px">AI Visibility Report</div>
     <h2 style="font-family:var(--font-display);font-size:28px;font-weight:600;color:#fff;margin:0 0 24px">${auditBrand}</h2>
@@ -479,25 +603,31 @@ function renderReport() {
     <div style="font-size:13px;color:#666;margin-top:12px">${auditCat} · Audited ${today}</div>
   </div>`;
 
-  // Score cards
+  // Show warning if some queries failed
+  if (errorCount > 0 && errorCount < QUERIES.length) {
+    h += `<div class="error-banner">
+      <p>${errorCount} of 5 dimensions couldn't be analyzed due to a technical issue. Scores reflect the ${QUERIES.length - errorCount} dimensions that completed successfully. <a href="javascript:resetAudit()" style="color:var(--gold)">Run again</a> for a complete audit.</p>
+    </div>`;
+  }
+
   h += '<div class="score-grid">';
   QUERIES.forEach((q, i) => {
     const sc = calcScore(q.id, results[q.id]);
     const d = results[q.id];
+    const hasError = d && d.error;
     const sum = d && !d.error ? (d.summary || d.category_leaders || 'Analysis complete.') : '';
     h += `<div class="score-card" style="animation-delay:${i*0.1}s">
       <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
-        <div><div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px">${q.label}</div>
+        <div><div style="font-size:14px;font-weight:600;color:${hasError ? 'var(--red)' : 'var(--text)'};margin-bottom:2px">${q.label}</div>
         <div style="font-size:11px;color:#666">${q.desc}</div></div>
-        ${svgRing(sc, 48, 4, scoreColor(sc))}
+        ${hasError ? '<div style="font-size:11px;color:var(--red);padding:4px 10px;border-radius:8px;background:rgba(239,68,68,0.1)">N/A</div>' : svgRing(sc, 48, 4, scoreColor(sc))}
       </div>
       ${sum ? `<div style="font-size:13px;color:var(--text-dim);line-height:1.5">${sum}</div>` : ''}
-      ${d&&d.error ? '<div style="font-size:12px;color:var(--red)">Unable to analyze.</div>' : ''}
+      ${hasError ? '<div style="font-size:12px;color:rgba(239,68,68,0.6)">This dimension could not be analyzed. Run again for complete results.</div>' : ''}
     </div>`;
   });
   h += '</div>';
 
-  // Recs
   h += '<div class="rec-panel"><h3 style="font-family:var(--font-display);font-size:18px;font-weight:600;margin:0 0 20px;color:#fff">Recommendations</h3>';
   recs.forEach((r, i) => {
     const cls = r.p.toLowerCase();
@@ -511,7 +641,6 @@ function renderReport() {
   });
   h += '</div>';
 
-  // CTA
   h += `<div class="cta-card">
     <div style="font-family:var(--font-display);font-size:20px;font-weight:600;color:#fff;margin-bottom:8px">Want to fix this?</div>
     <p style="font-size:14px;color:var(--text-dim);margin:0 0 20px;line-height:1.5">I help premium F&B brands become the answer when AI recommends products in their category. Let's talk about a strategy tailored to ${auditBrand}.</p>
@@ -520,6 +649,15 @@ function renderReport() {
 
   h += `<div class="footer">AI Search Audit by Ally Kiel · allykiel.carrd.co</div>`;
   rep.innerHTML = h;
+}
+
+function resetAudit() {
+  results = {};
+  errorCount = 0;
+  document.getElementById('report').classList.add('hidden');
+  document.getElementById('emailGate').classList.add('hidden');
+  document.getElementById('progress').classList.add('hidden');
+  document.getElementById('inputSection').style.display = 'block';
 }
 </script>
 </body>
