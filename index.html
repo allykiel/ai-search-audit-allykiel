@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -223,7 +224,7 @@
     <div class="social-proof">
       <div class="proof-item">🔍 <span>5</span> AI dimensions analyzed</div>
       <div class="proof-item">📊 Scored <span>0–100</span> with recommendations</div>
-      <div class="proof-item">⚡ Results in <span>~60 seconds</span></div>
+      <div class="proof-item">⚡ Results in <span>~90 seconds</span></div>
     </div>
   </div>
 
@@ -243,7 +244,7 @@
     </div>
     <div id="errorMsg" class="error hidden"></div>
     <button class="btn-primary" id="runBtn" onclick="runAudit()">Audit My Brand's AI Visibility</button>
-    <p style="font-size:11px; color:#444; text-align:center; margin-top:12px;">Powered by live AI search analysis · Takes about 60 seconds</p>
+    <p style="font-size:11px; color:#444; text-align:center; margin-top:12px;">Powered by live AI search analysis · Takes about 90 seconds</p>
   </div>
 
   <div id="progress" class="hidden"></div>
@@ -341,7 +342,7 @@ async function callAPI(prompt, retries = 2) {
           'anthropic-dangerous-direct-browser-access': 'true'
         },
         body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
+          model: 'claude-haiku-4-5-20251001',
           max_tokens: 1024,
           messages: [{ role: 'user', content: prompt }],
           tools: [{ type: 'web_search_20250305', name: 'web_search' }]
@@ -499,7 +500,7 @@ async function runAudit() {
     const q = QUERIES[i];
 
     // Wait between calls to avoid rate limiting
-    if (i > 0) await new Promise(r => setTimeout(r, 3000));
+    if (i > 0) await new Promise(r => setTimeout(r, 6000));
 
     try {
       const text = await callAPI(q.tpl(auditBrand, auditCat), 2);
