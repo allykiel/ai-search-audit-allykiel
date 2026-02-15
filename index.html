@@ -564,8 +564,32 @@ function unlockReport() {
     alert('Please enter a valid email address.');
     return;
   }
+
+  // Calculate overall score for the email
+  const overall = Math.round(QUERIES.reduce((s,q) => s + calcScore(q.id, results[q.id]), 0) / QUERIES.length);
+  const grade = gradeInfo(overall).g;
+
+  // Send lead info to your email via FormSubmit
+  fetch('https://formsubmit.co/ajax/allykiel@gmail.com', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      _subject: `New AI Audit Lead: ${auditBrand} (${grade})`,
+      Name: auditName || 'Not provided',
+      Email: email,
+      Brand: auditBrand,
+      Category: auditCat,
+      'Overall Score': `${overall}/100 (${grade})`,
+      'Brand Discovery': calcScore('discovery', results['discovery']),
+      'Category Authority': calcScore('category', results['category']),
+      'Reputation': calcScore('reputation', results['reputation']),
+      'Competitive': calcScore('competitors', results['competitors']),
+      'Purchase Intent': calcScore('purchase', results['purchase']),
+      _template: 'table'
+    })
+  }).catch(e => console.warn('Email notification failed:', e));
+
   console.log('LEAD CAPTURED:', { brand: auditBrand, category: auditCat, name: auditName, email: email });
-  // TODO: POST to your email service here
   document.getElementById('emailGate').classList.add('hidden');
   renderReport();
 }
